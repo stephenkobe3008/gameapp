@@ -1,6 +1,9 @@
 import React from 'react';
+import { achievements } from '../../constants/gameConstants';
 
 export const GameOverScreen = ({ gameState, onBackToTitle }) => {
+  const unlockedAchievements = achievements.filter(a => a.check(gameState));
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-900 to-gray-900 flex items-center justify-center p-4">
       <div className="bg-amber-100 rounded-xl p-8 max-w-md w-full text-center space-y-6">
@@ -11,7 +14,18 @@ export const GameOverScreen = ({ gameState, onBackToTitle }) => {
           <p><strong>最大信者数:</strong> {gameState.followers}人</p>
           <p><strong>建設した施設:</strong> {gameState.buildings.length}棟</p>
           <p><strong>影響力:</strong> {gameState.influence}</p>
+          <p><strong>獲得実績:</strong> {unlockedAchievements.length}/{achievements.length}</p>
         </div>
+        {unlockedAchievements.length > 0 && (
+          <div className="bg-yellow-50 p-4 rounded-lg">
+            <h4 className="font-bold text-amber-900 mb-2">🏆 解除した実績</h4>
+            <div className="space-y-1 text-sm">
+              {unlockedAchievements.map(a => (
+                <div key={a.id} className="text-left">• {a.name}</div>
+              ))}
+            </div>
+          </div>
+        )}
         <button
           onClick={onBackToTitle}
           className="w-full bg-gradient-to-r from-amber-600 to-amber-800 text-white px-6 py-3 rounded-lg font-bold hover:scale-105 transition-transform"

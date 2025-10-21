@@ -1,14 +1,14 @@
 import React, { useState, useCallback } from 'react';
-import { TitleScreen, GameOverScreen, BuildingScreen, MainGameScreen } from './components/screens';
+import { TitleScreen, GameOverScreen, BuildingScreen, MainGameScreen, StatsScreen } from './components/screens';
 import { Modal, Notification } from './components/ui';
 import { useGameState } from './hooks/useGameState';
-import { researchTypes } from './constants/researchTypes';
 
 export default function ReligionGame() {
   const [screen, setScreen] = useState('title');
   const [selectedBuilding, setSelectedBuilding] = useState(null);
   const [notification, setNotification] = useState(null);
   const [modalType, setModalType] = useState(null);
+  const [showStats, setShowStats] = useState(false);
 
   const showNotification = useCallback((title, message) => {
     setNotification({ title, message });
@@ -44,7 +44,7 @@ export default function ReligionGame() {
   };
 
   const handleDoResearch = (type) => {
-    if (doResearch(type, researchTypes)) {
+    if (doResearch(type)) {
       setModalType(null);
     }
   };
@@ -96,6 +96,7 @@ export default function ReligionGame() {
         onOpenBuildModal={() => setModalType('build')}
         onOpenMissionaryModal={() => setModalType('missionary')}
         onOpenResearchModal={() => setModalType('research')}
+        onOpenStats={() => setShowStats(true)}
         onBackToTitle={() => setScreen('title')}
       />
       <Modal
@@ -106,6 +107,7 @@ export default function ReligionGame() {
         onHire={handleHireMissionary}
         onResearch={handleDoResearch}
       />
+      {showStats && <StatsScreen gameState={gameState} onClose={() => setShowStats(false)} />}
       <Notification notification={notification} />
     </>
   );
